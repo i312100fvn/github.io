@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Profile I312100F</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- CẤU HÌNH CHUNG --- */
+        :root {
+            --primary-glow: #8A2BE2;
+            --bg-dark: #0f0f0f;
+            --card-bg: rgba(20, 20, 20, 0.75);
+            --text-white: #ffffff;
+            --text-gray: #b3b3b3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            background-image: radial-gradient(circle at 50% 0%, #2b0042, #000000);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-white);
+            overflow: hidden;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- BACKGROUND PARTICLES --- */
+        .particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: rgba(138, 43, 226, 0.5);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* --- MUSIC PLAYER CONTROL (Góc phải) --- */
+        .music-wrapper {
+            position: fixed;
+            top: 20px; right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.3);
+            padding: 5px 10px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            transition: 0.3s;
+        }
+
+        .music-wrapper:hover {
+            background: rgba(0,0,0,0.6);
+            border-color: var(--primary-glow);
+        }
+
+        /* Nút tròn Play/Pause */
+        .music-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .music-btn:hover { background: var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow); }
+
+        /* Animation sóng nhạc bên trong nút */
+        .music-wave { display: flex; gap: 3px; height: 15px; align-items: flex-end; }
+        .bar { width: 3px; background: #fff; animation: equalizer 0.5s infinite; }
+        .bar:nth-child(1) { animation-delay: 0.1s; height: 60%; }
+        .bar:nth-child(2) { animation-delay: 0.2s; height: 80%; }
+        .bar:nth-child(3) { animation-delay: 0.3s; height: 50%; }
+        
+        @keyframes equalizer { 0%, 100% { height: 40%; } 50% { height: 100%; } }
+        .paused .bar { animation: none; height: 3px; }
+
+        /* Thanh Volume Slider */
+        .volume-slider {
+            width: 0; /* Ẩn mặc định */
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            appearance: none;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        /* Hiển thị thanh volume khi hover vào cụm nhạc */
+        .music-wrapper:hover .volume-slider {
+            width: 80px;
+            opacity: 1;
+            margin-right: 5px;
+        }
+
+        /* Style cho nút kéo của thanh volume */
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px; height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px var(--primary-glow);
+        }
+
+        /* --- CARD PROFILE --- */
+        .profile-card {
+            position: relative;
+            width: 90%; 
+            max-width: 380px; 
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 35px;
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(138, 43, 226, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform-style: preserve-3d;
+            animation: floating 6s ease-in-out infinite; /* Animation trôi nổi */
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- AVATAR --- */
+        .avatar-box {
+            position: relative;
+            margin-bottom: 20px;
+            width: 140px;
+            height: 140px;
+        }
+        .avatar-box::before {
+            content: '';
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--primary-glow);
+            border-bottom-color: var(--primary-glow);
+            animation: spin 6s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .avatar {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #1a1a1a;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            animation: glitch-anim 5s infinite;
+        }
+        @keyframes glitch-anim {
+            0% { transform: translate(0) }
+            2% { transform: translate(-2px, 2px) }
+            4% { transform: translate(2px, -2px) }
+            6% { transform: translate(0) }
+            100% { transform: translate(0) }
+        }
+
+        /* --- INFO TEXT --- */
+        .username {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .verified {
+            font-size: 1.2rem;
+            color: #1DA1F2;
+            filter: drop-shadow(0 0 5px rgba(29, 161, 242, 0.5));
+        }
+        .bio-text {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            margin-bottom: 35px;
+            font-weight: 400;
+            min-height: 24px;
+        }
+        .cursor {
+            display: inline-block; width: 2px;
+            background-color: var(--primary-glow);
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* --- SOCIAL BUTTONS --- */
+        .social-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+        .social-btn {
+            width: 65px; height: 65px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            touch-action: manipulation; 
+        }
+        .zalo-img { width: 38px; height: auto; filter: grayscale(100%); transition: 0.3s; }
+
+        .social-btn:hover, .social-btn:active { transform: translateY(-5px) scale(1.1); color: #fff; }
+        
+        .social-btn.tiktok:hover, .social-btn.tiktok:active {
+            background: #000;
+            box-shadow: -2px 2px 0 #00f2ea, 2px -2px 0 #ff0050;
+            border-color: #333;
+        }
+        .social-btn.discord:hover, .social-btn.discord:active {
+            background: #5865F2;
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.6);
+            border-color: #5865F2;
+        }
+        .social-btn.zalo:hover, .social-btn.zalo:active {
+            background: #0068FF;
+            box-shadow: 0 0 20px rgba(0, 104, 255, 0.6);
+            border-color: #0068FF;
+        }
+        .social-btn.zalo:hover .zalo-img, .social-btn.zalo:active .zalo-img { filter: grayscale(0%); }
+
+        /* --- RIPPLE EFFECT --- */
+        .ripple {
+            position: absolute; border-radius: 50%;
+            transform: scale(0); animation: ripple 0.6s linear;
+            background-color: rgba(255, 255, 255, 0.4);
+            pointer-events: none; z-index: 9999;
+        }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+    </style>
+</head>
+<body>
+
+    <!-- PHẦN XỬ LÝ NHẠC -->
+    <div class="music-wrapper">
+        <!-- Thanh Volume (Hiện khi hover vào cụm này) -->
+        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.5">
+        
+        <!-- Nút Bật/Tắt -->
+        <div class="music-btn paused" id="musicBtn" onclick="toggleMusic()">
+            <div class="music-wave">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUDIO SOURCE: Link nhạc Trả Cho Anh (MP3) -->
+    <!-- loop="true" để tự động phát lại vô tận -->
+    <audio id="bgMusic" loop>
+        <source src="https://files.catbox.moe/872459.mp3" type="audio/mpeg">
+        <!-- Nếu link trên bị lỗi, bạn có thể thay thế bằng link mp3 khác vào src -->
+    </audio>
+
+    <!-- Nền Bụi Bay -->
+    <div class="particles" id="particles"></div>
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card">
+        <div class="avatar-box">
+            <img src="https://i.postimg.cc/fL50XDB7/logo-3.png" alt="Avatar I312100F" class="avatar">
+        </div>
+
+        <h1 class="username">
+            I312100F 
+            <i class="fa-solid fa-circle-check verified"></i>
+        </h1>
+
+        <p class="bio-text">
+            <span id="typewriter"></span><span class="cursor">|</span>
+        </p>
+
+        <div class="social-row">
+            <a href="https://www.tiktok.com/@i3.12100f7?_r=1&_t=ZS-940R1THQyNp" target="_blank" class="social-btn tiktok">
+                <i class="fa-brands fa-tiktok"></i>
+            </a>
+            <a href="https://discord.gg/ASzAYPd4vc" target="_blank" class="social-btn discord">
+                <i class="fa-brands fa-discord"></i>
+            </a>
+            <a href="https://zalo.me/0835051246" target="_blank" class="social-btn zalo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png" alt="Zalo" class="zalo-img">
+            </a>
+        </div>
+    </div>
+
+    <script>
+        /* --- JS: TẠO HẠT BỤI --- */
+        const particlesContainer = document.getElementById('particles');
+        for(let i=0; i<25; i++){
+            let p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            p.style.animationDelay = (Math.random() * 5) + 's';
+            p.style.opacity = Math.random();
+            particlesContainer.appendChild(p);
+        }
+
+        /* --- JS: GÕ CHỮ --- */
+        const textToType = "Welcome to my private space";
+        const typeWriterElement = document.getElementById('typewriter');
+        let i = 0;
+        function typeWriter() {
+            if (i < textToType.length) {
+                typeWriterElement.innerHTML += textToType.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        typeWriter();
+
+        /* --- JS: XỬ LÝ NHẠC & VOLUME --- */
+        const musicBtn = document.getElementById('musicBtn');
+        const audio = document.getElementById('bgMusic');
+        const volumeSlider = document.getElementById('volumeSlider');
+        
+        // Mặc định âm lượng 50%
+        audio.volume = 0.5;
+
+        // Bật/Tắt nhạc
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                musicBtn.classList.remove('paused');
+            } else {
+                audio.pause();
+                musicBtn.classList.add('paused');
+            }
+        }
+
+        // Điều chỉnh Volume khi kéo thanh
+        volumeSlider.addEventListener('input', function() {
+            audio.volume = this.value;
+        });
+
+        /* --- JS: CLICK RIPPLE (SÓNG NƯỚC) --- */
+        window.addEventListener('click', function(e) {
+            // Không tạo sóng nếu bấm vào nút nhạc để tránh rối
+            if(e.target.closest('.music-wrapper')) return;
+
+            let ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            document.body.appendChild(ripple);
+            let size = 50;
+            ripple.style.width = size + 'px';
+            ripple.style.height = size + 'px';
+            ripple.style.left = e.clientX - (size/2) + 'px';
+            ripple.style.top = e.clientY - (size/2) + 'px';
+            setTimeout(() => { ripple.remove() }, 600);
+        });
+
+        /* --- JS: 3D TILT (CHỈ CHẠY TRÊN PC) --- */
+        const card = document.querySelector('.profile-card');
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth > 768) {
+                let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }
+        });
+        
+        document.addEventListener('mouseleave', () => {
+             // Reset về trạng thái cũ (vẫn giữ animation floating)
+             card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+        });
+
+    </script>
+</body>
+</html>
